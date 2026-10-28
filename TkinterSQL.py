@@ -119,18 +119,152 @@ class AplikasiDiabetes(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Prediksi Risiko Diabetes")
-        self.geometry("460x520")
+        self.geometry("680x700")
         self.resizable(False, False)
+        self.warna_latar = "#f3f6fb"
+        self.warna_utama = "#173b57"
+        self.warna_aksen = "#17a589"
+        self.configure(bg=self.warna_latar)
+        self._atur_style()
         self._buat_widget()
 
-    def _buat_widget(self):
-        ttk.Label(
-            self, text="Prediksi Risiko Diabetes", font=("Segoe UI", 16, "bold")
-        ).pack(pady=(15, 5))
-        ttk.Label(self, text="Isi data pasien di bawah ini").pack(pady=(0, 10))
+    def _atur_style(self):
+        style = ttk.Style(self)
+        style.theme_use("clam")
+        style.configure("TFrame", background=self.warna_latar)
+        style.configure(
+            "Card.TFrame",
+            background="#ffffff",
+            relief="flat",
+        )
+        style.configure(
+            "Header.TLabel",
+            background=self.warna_utama,
+            foreground="#ffffff",
+            font=("Segoe UI", 22, "bold"),
+        )
+        style.configure(
+            "Subtitle.TLabel",
+            background=self.warna_utama,
+            foreground="#d7e5ef",
+            font=("Segoe UI", 10),
+        )
+        style.configure(
+            "Section.TLabel",
+            background="#ffffff",
+            foreground=self.warna_utama,
+            font=("Segoe UI", 12, "bold"),
+        )
+        style.configure(
+            "Field.TLabel",
+            background="#ffffff",
+            foreground="#34495e",
+            font=("Segoe UI", 10, "bold"),
+        )
+        style.configure(
+            "Hint.TLabel",
+            background="#ffffff",
+            foreground="#7b8a97",
+            font=("Segoe UI", 9),
+        )
+        style.configure(
+            "Footer.TLabel",
+            background=self.warna_latar,
+            foreground="#7b8a97",
+            font=("Segoe UI", 9),
+        )
+        style.configure(
+            "TEntry",
+            fieldbackground="#f8fafc",
+            foreground="#243746",
+            padding=(10, 8),
+            bordercolor="#dce4ec",
+            lightcolor="#dce4ec",
+            darkcolor="#dce4ec",
+        )
+        style.configure(
+            "TCombobox",
+            fieldbackground="#f8fafc",
+            foreground="#243746",
+            padding=(8, 7),
+            bordercolor="#dce4ec",
+            lightcolor="#dce4ec",
+            darkcolor="#dce4ec",
+        )
+        style.configure(
+            "Primary.TButton",
+            background=self.warna_aksen,
+            foreground="#ffffff",
+            font=("Segoe UI", 10, "bold"),
+            padding=(16, 10),
+            borderwidth=0,
+        )
+        style.map(
+            "Primary.TButton",
+            background=[("active", "#12816b"), ("pressed", "#0f6f5c")],
+            foreground=[("disabled", "#dce4ec")],
+        )
+        style.configure(
+            "Secondary.TButton",
+            background="#eaf0f5",
+            foreground=self.warna_utama,
+            font=("Segoe UI", 10, "bold"),
+            padding=(14, 10),
+            borderwidth=0,
+        )
+        style.map(
+            "Secondary.TButton",
+            background=[("active", "#dce6ee"), ("pressed", "#cfdae4")],
+        )
+        style.configure(
+            "Treeview",
+            background="#ffffff",
+            fieldbackground="#ffffff",
+            foreground="#263746",
+            rowheight=32,
+            font=("Segoe UI", 9),
+            borderwidth=0,
+        )
+        style.configure(
+            "Treeview.Heading",
+            background=self.warna_utama,
+            foreground="#ffffff",
+            font=("Segoe UI", 9, "bold"),
+            padding=(8, 10),
+            borderwidth=0,
+        )
+        style.map(
+            "Treeview",
+            background=[("selected", "#d8eee9")],
+            foreground=[("selected", self.warna_utama)],
+        )
 
-        form = ttk.Frame(self, padding=10)
-        form.pack(fill="x", padx=20)
+    def _buat_widget(self):
+        header = tk.Frame(self, bg=self.warna_utama, padx=38, pady=25)
+        header.pack(fill="x")
+        ttk.Label(
+            header,
+            text="Prediksi Risiko Diabetes",
+            style="Header.TLabel",
+        ).pack(anchor="w")
+        ttk.Label(
+            header,
+            text="Catat data pasien dan dapatkan gambaran tingkat risiko.",
+            style="Subtitle.TLabel",
+        ).pack(anchor="w", pady=(5, 0))
+
+        card = ttk.Frame(self, style="Card.TFrame", padding=(30, 24))
+        card.pack(fill="both", expand=True, padx=34, pady=(22, 12))
+
+        ttk.Label(
+            card,
+            text="Data Pasien",
+            style="Section.TLabel",
+        ).pack(anchor="w", pady=(0, 16))
+
+        form = ttk.Frame(card, style="Card.TFrame")
+        form.pack(fill="x")
+        form.columnconfigure(1, weight=1)
 
         self.var_nama = tk.StringVar()
         self.var_usia = tk.StringVar()
@@ -138,50 +272,76 @@ class AplikasiDiabetes(tk.Tk):
         self.var_bmi = tk.StringVar()
         self.var_riwayat = tk.StringVar()
 
-        ttk.Label(form, text="Nama Pasien").grid(row=0, column=0, sticky="w", pady=6)
-        ttk.Entry(form, textvariable=self.var_nama, width=30).grid(row=0, column=1, pady=6)
-
-        ttk.Label(form, text="Usia (tahun)").grid(row=1, column=0, sticky="w", pady=6)
-        ttk.Entry(form, textvariable=self.var_usia, width=30).grid(row=1, column=1, pady=6)
-
-        ttk.Label(form, text="Gula Darah (mg/dL)").grid(row=2, column=0, sticky="w", pady=6)
-        ttk.Entry(form, textvariable=self.var_gula, width=30).grid(row=2, column=1, pady=6)
-
-        ttk.Label(form, text="BMI").grid(row=3, column=0, sticky="w", pady=6)
-        ttk.Entry(form, textvariable=self.var_bmi, width=30).grid(row=3, column=1, pady=6)
-
-        ttk.Label(form, text="Riwayat Diabetes Ortu").grid(row=4, column=0, sticky="w", pady=6)
-        ttk.Combobox(
-            form,
-            textvariable=self.var_riwayat,
-            values=("Ya", "Tidak"),
-            state="readonly",
-            width=27,
-        ).grid(row=4, column=1, pady=6)
-
-        tombol = ttk.Frame(self)
-        tombol.pack(pady=15)
-        ttk.Button(tombol, text="Prediksi & Simpan", command=self.proses_prediksi).grid(
-            row=0, column=0, padx=5
+        fields = (
+            ("Nama Pasien", self.var_nama, "entry", "Masukkan nama lengkap"),
+            ("Usia", self.var_usia, "entry", "Tahun"),
+            ("Gula Darah", self.var_gula, "entry", "mg/dL"),
+            ("BMI", self.var_bmi, "entry", "Indeks massa tubuh"),
+            ("Riwayat Diabetes Ortu", self.var_riwayat, "choice", ""),
         )
-        ttk.Button(tombol, text="Lihat Data", command=self.lihat_data).grid(
-            row=0, column=1, padx=5
-        )
-        ttk.Button(tombol, text="Reset", command=self.reset_form).grid(
-            row=0, column=2, padx=5
-        )
+        for row, (label, variable, field_type, hint) in enumerate(fields):
+            ttk.Label(form, text=label, style="Field.TLabel").grid(
+                row=row, column=0, sticky="w", padx=(0, 18), pady=8
+            )
+            if field_type == "choice":
+                field = ttk.Combobox(
+                    form,
+                    textvariable=variable,
+                    values=("Ya", "Tidak"),
+                    state="readonly",
+                )
+            else:
+                field = ttk.Entry(form, textvariable=variable)
+            field.grid(row=row, column=1, sticky="ew", pady=8)
+            if hint:
+                ttk.Label(form, text=hint, style="Hint.TLabel").grid(
+                    row=row, column=2, sticky="w", padx=(10, 0)
+                )
 
-        ttk.Label(self, text="Hasil Prediksi:", font=("Segoe UI", 11, "bold")).pack()
+        ttk.Separator(card, orient="horizontal").pack(fill="x", pady=(18, 18))
+        ttk.Label(
+            card,
+            text="Hasil Prediksi",
+            style="Section.TLabel",
+        ).pack(anchor="w", pady=(0, 10))
         self.lbl_hasil = tk.Label(
-            self,
-            text="-",
-            font=("Segoe UI", 18, "bold"),
-            width=22,
+            card,
+            text="Hasil akan tampil di sini",
+            font=("Segoe UI", 13, "bold"),
             height=2,
-            bg="#e0e0e0",
-            fg="black",
+            bg="#edf2f7",
+            fg="#7b8a97",
+            anchor="w",
+            padx=18,
         )
-        self.lbl_hasil.pack(pady=10)
+        self.lbl_hasil.pack(fill="x")
+
+        tombol = ttk.Frame(card, style="Card.TFrame")
+        tombol.pack(fill="x", pady=(20, 0))
+        ttk.Button(
+            tombol,
+            text="Prediksi & Simpan",
+            command=self.proses_prediksi,
+            style="Primary.TButton",
+        ).pack(side="left")
+        ttk.Button(
+            tombol,
+            text="Lihat Riwayat",
+            command=self.lihat_data,
+            style="Secondary.TButton",
+        ).pack(side="left", padx=(10, 0))
+        ttk.Button(
+            tombol,
+            text="Reset",
+            command=self.reset_form,
+            style="Secondary.TButton",
+        ).pack(side="right")
+
+        ttk.Label(
+            self,
+            text="Hasil prediksi merupakan skrining awal, bukan diagnosis medis.",
+            style="Footer.TLabel",
+        ).pack(pady=(0, 14))
 
     def proses_prediksi(self):
         data, error = validasi_input(
@@ -212,26 +372,34 @@ class AplikasiDiabetes(tk.Tk):
     def reset_form(self):
         for var in (self.var_nama, self.var_usia, self.var_gula, self.var_bmi, self.var_riwayat):
             var.set("")
-        self.lbl_hasil.config(text="-", bg="#e0e0e0", fg="black")
+        self.lbl_hasil.config(
+            text="Hasil akan tampil di sini",
+            bg="#edf2f7",
+            fg="#7b8a97",
+        )
 
     def lihat_data(self):
         win = tk.Toplevel(self)
         win.title("Riwayat Data Pasien")
-        win.geometry("760x380")
+        win.geometry("900x460")
+        win.configure(bg=self.warna_latar)
 
         kolom = ("id", "nama", "usia", "gula", "bmi", "riwayat", "hasil")
         judul = ("ID", "Nama Pasien", "Usia", "Gula Darah", "BMI", "Riwayat Ortu", "Hasil Prediksi")
         lebar = (40, 190, 60, 90, 60, 100, 120)
 
-        tree = ttk.Treeview(win, columns=kolom, show="headings")
+        container = ttk.Frame(win, padding=18)
+        container.pack(fill="both", expand=True)
+        tree = ttk.Treeview(container, columns=kolom, show="headings")
         for k, j, w in zip(kolom, judul, lebar):
             tree.heading(k, text=j)
             tree.column(k, width=w, anchor="center" if k != "nama" else "w")
 
+        tree.tag_configure("even", background="#f3f7fa")
         for risiko, warna in WARNA_RISIKO.items():
             tree.tag_configure(risiko, foreground=warna)
 
-        scroll = ttk.Scrollbar(win, orient="vertical", command=tree.yview)
+        scroll = ttk.Scrollbar(container, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         tree.pack(side="left", fill="both", expand=True)
         scroll.pack(side="right", fill="y")
@@ -245,8 +413,9 @@ class AplikasiDiabetes(tk.Tk):
 
         if not baris:
             messagebox.showinfo("Informasi", "Belum ada data pasien tersimpan.")
-        for row in baris:
-            tree.insert("", "end", values=row, tags=(row[6],))
+        for index, row in enumerate(baris):
+            tags = (row[6], "even") if index % 2 == 0 else (row[6],)
+            tree.insert("", "end", values=row, tags=tags)
 
 
 if __name__ == "__main__":
